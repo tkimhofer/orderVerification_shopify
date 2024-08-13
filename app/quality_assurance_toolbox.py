@@ -116,7 +116,7 @@ class OrderCheckShopify:
                 self.free_item_mismatch['excess'] |= Counter({(g, 'free'): data['items_sold'].sum()
                                                          for g, data in free_itms_excess.groupby('product_sku')})
 
-    def log_message(self):
+    def create_message(self):
         '''Preparing message for stackeholders reporting
             Returns:
                 tuple(bool, str): True as first element (bool) indicates that no errors were found (ie.,

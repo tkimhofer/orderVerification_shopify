@@ -70,7 +70,7 @@ class ShopifyWebhookHandler:
             # instantiate order obj, run workflow & create notification message
             Order = OrderCheckShopify(request.json)
             Order.validate_basket_items()
-            message = Order.log_message()
+            message = Order.create_message()
 
             if message[0]: # is true if item mismatches are found
                 print(f'{dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}: Quality issues found for order {Order.order_id}')
