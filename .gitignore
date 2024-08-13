@@ -1,4 +1,4 @@
 .*
 !.gitignore
 create_sqlite.py
-webhook_simulator.py
+shopify_webhook_simulator.py
