@@ -1,5 +1,5 @@
 .*
 !.gitignore
-/tests/testing.py
+tests/testing.py
 create_sqlite.py
 shopify_webhook_simulator.py
