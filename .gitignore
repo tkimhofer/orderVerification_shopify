@@ -1,4 +1,5 @@
 .*
 !.gitignore
+/tests
 create_sqlite.py
 shopify_webhook_simulator.py

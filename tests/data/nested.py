@@ -1,7 +1,7 @@
 import json
 import numpy as np
 
-#### CARTOON ORDERS, NESTED BUNDLE SETUP
+#### CARTOON PRODUCT BUNDLES AND SHOPPING CARTS (ORDERS)
 
 # Define the bundles
 starterSet4w = {
@@ -36,17 +36,16 @@ nested_bundle = {
     }
 }
 
-
 ## Test order #4
 # 1 x nested_bundle + 1 x additional item of the BOGO discounted flavour variant (not payed)
-order_id = 1
+cart_id = 1
 items_sold = [1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1] # item quantity
 n_prod =  len(items_sold) # product defined here as sellable unit that may or may not be available in different variants
 
-order_4 = {
+cart_4 = {
     'order_line_item_id': [f'oli-{i}' for i in range(1,n_prod+1)],
     'order_line_id': list(range(1, n_prod+1)),
-    'order_id': [f'#{order_id} (nested)'] * n_prod,
+    'order_id': [f'#{cart_id} (nested)'] * n_prod,
 
     'product_id':
         ['mf-b-4wStarterSet'] +
@@ -68,11 +67,5 @@ order_4 = {
     'bundle_property': [json.dumps(nested_bundle)] * (n_prod-1) + [None],
 }
 
-order_4['product_sku'] =  [x[:7] for x in order_4['item_sku']]
-order_4['product_price'][0] = sum(order_4['product_price'][1:])
-
-# order_4['item_sku']
-# # double-checking
-for x, d in order_4.items():
-    if len(d) != 11:
-        print(x)
+cart_4['product_sku'] =  [x[:7] for x in cart_4['item_sku']]
+cart_4['product_price'][0] = sum(cart_4['product_price'][1:])
