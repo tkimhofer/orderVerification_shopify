@@ -6,6 +6,14 @@ from dataclasses import dataclass, field
 
 #### CARTOON ORDERS, SIMPLE BUNDLE SETUP
 
+# definitions:
+# product: article that may or may not be available in different variants
+# item: sellable unit (ie., variant of a product)
+# stock keeping unit (sku): id assigned to product, sellable or bundle.
+# sku format: sku-[a]-[b] -> [a] being product/bundle identifier, [b] -> product variant identifier
+
+
+
 ## definition bundle 1:  4w Starter Set (sku-200)
 # fixed price for 4 paid items + 4 freebies:
 # 4 x meal-powder, all paid (sku-001)
@@ -25,49 +33,6 @@ bundle_1 = \
             'sku-005': {'n': 1, 'variant_sku': None, 'pricing': False},  # free vitamins
         }
     }}
-
-
-class base_dataclass:
-
-    def convert_to_dict(self):
-
-
-
-# definitions:
-# product: article that may or may not be available in different variants
-# item: sellable unit (ie., variant of a product)
-# stock keeping unit (sku): id assigned to product, sellable item or bundle.
-# sku format: sku-[a]-[b] -> [a] being product/bundle identifier, [b] -> product variant identifier
-#
-# @dataclass
-# class cart_1:
-#     # items: 1 x bundle_1, no other items in shopping cart
-#     order_id = 1
-#     item_sku: list = field(default_factory=lambda: [
-#         'sku-200-001',
-#         'sku-001-001', 'sku-001-002', 'sku-001-003',
-#         'sku-002-001', 'sku-003-001', 'sku-004-001', 'sku-005-001'
-#     ])
-#     items_sold: list = field(default_factory=lambda:
-#                              [1,
-#                               1, 1, 2,
-#                               1, 1, 1, 1])  # item quantities
-#     n_prod: int = len(items_sold)
-#
-#     order_line_item_id: str = field(default_factory=lambda: [f'oli-{i}' for i in range(1, n_prod + 1)])
-#     order_line_id: int = field(default_factory=lambda: list(range(1, n_prod + 1)))
-#     product_id: list =field(default_factory=lambda:
-#                         ['mf-b-4wStarterSet'] +\
-#                         ['mf-p-powder'] * 3 +\
-#                         ['mf-p-shaker', 'mf-p-dplan', 'mf-p-cookbook', 'mf-p-vitamins'])
-#     product_price: float = field(default_factory=lambda: [179.84] + [179.84 / 4] * 2 + [179.84 / 4 * 2] + [0.] * 4)
-#     item_index: int = np.cumsum(items_sold).tolist(),
-#     items_sold: int = items_sold,
-#     item_sku: list = field(default_factory=lambda: item_sku)
-#     bundle_id: str = field(default_factory=lambda: ['sku-200-StarterSet4w'] * n_prod)
-#     bundle_property: str = [json.dumps(bundle_1)] * n_prod,
-#     product_sku: list = field(default_factory=lambda: [x[:7] for x in item_sku])
-
 
 
 ## test order #1
