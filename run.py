@@ -1,24 +1,22 @@
+# Note: app set-up for testing (not production)
 from flask import Flask
 from dotenv import load_dotenv
-
-# Note: set-up for testin (not production)
-
 load_dotenv('.env', override=True)
 from app.api_connector import ShopifyWebhookHandler
 
 app = Flask(__name__)
 
-# instantiate wh-handler and define endpoint for newly paid orders
+# instantiate and ShopifyWebhookHandler
 shopify_qc =  ShopifyWebhookHandler()
 
+# define endpoint
 @app.route('/orders/paid', methods=['POST'])
 def webhook():
     return shopify_qc.handle_order_paid()
 
-# obtain static IP addr and configure firewall for traffic on resp. port
-# run application
+# run application / adjust port
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=9011,)
+    app.run(host='0.0.0.0', port=9000,)
 
 # recommendations/suggestions for production mode:
 # obtain static IP addr (on cloud: configure firewall for traffic on resp. port)

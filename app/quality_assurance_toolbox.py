@@ -64,14 +64,14 @@ class OrderCheckShopify:
         Workflow:
             1. If items are sold in bundle: Extract bundle composition from bundle_prop. (product/item sku and quantity)
             2. Multiply item quantities from step 1 with bundle order quantity
-            2. Match product/item skus between bundle composition and order lines
+            2. Map product/item skus from bundle composition with resp. order lines entries
             3. Compare order quantity (n) and pricing type (payed/free)
             4. Count skus where item quantity and pricing type mismatch
                 i) items present in order but not in bundle prop (excess of free items in order),
                 ii) items found in bundle prop but not in order (lack of free items in order)
             5. Filter mismatches for only free items
 
-        Free item-mismatches are store in instance variable `free_item_mismatch`, which is processed in `log_message()`
+        Free item-mismatches are store in `self.free_item_mismatch`, which is processed in class method `log_message()`
         """
 
         for bundle_property, df_items in self.order_lines.groupby('bundle_property'):
@@ -117,11 +117,10 @@ class OrderCheckShopify:
                                                          for g, data in free_itms_excess.groupby('product_sku')})
 
     def create_message(self):
-        '''Preparing message for stackeholders reporting
+        '''Preparing message for stackeholder reporting
             Returns:
-                tuple(bool, str): True as first element (bool) indicates that no errors were found (ie.,
-                                    no message to be send), second element (str) is the message for stakeholder
-                                    reporting / logging
+                tuple(bool, str): First tuple element indicates order completeness (ie., True -> no message),
+                                  Second tuple element is the message for stakeholder reporting / logging
         '''
 
         if self.free_item_mismatch['excess'] or self.free_item_mismatch['lack']:

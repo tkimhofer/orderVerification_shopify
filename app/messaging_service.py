@@ -11,6 +11,11 @@ class TelegramBot:
         self.token = os.environ.get("token") # api secret
 
     def send_message(self, message: str, recipients: dict):
+        '''Sens message to recipients
+            Args:
+                message (str): Message to be sent
+                recipients (dict): Recipient chat-id and name as key-value pair, both provided as str
+        '''
         payload = {'text': message}
         responses = []
         for id, name in recipients.items():
@@ -21,7 +26,9 @@ class TelegramBot:
                 print(f"""\t-> Message sent to "{name}" """)
             else:
                 # print(f"""\t{dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}: Bot failed messaging "{name}" with status {r.status_code}""")
-                raise ValueError(f"""{dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}: Bot failed messaging to "{name}" with status {r.status_code}: {str(dt.datetime.now())}""")
+                raise ValueError(
+                    f"""{dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}: 
+                        Bot failed messaging to "{name}" with status {r.status_code}""")
 
 
 # contacts = {

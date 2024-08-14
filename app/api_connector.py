@@ -9,30 +9,9 @@ import os
 from app.messaging_service import TelegramBot
 from app.quality_assurance_toolbox import OrderCheckShopify
 
-# ideas/thoughts regarding extensions
-# use logging library for app monitoring / health checks
-# submit heavy-workload processes as background job (eg. managing payload computations)
-# ORM framework might simplify if direct interaction with SQL DB desired
-
-from functools import wraps
-import time
-
-
-def print_runtime(func):
-    @wraps(func)
-    def _runtime(*args, **kwargs):
-        t1 = time.time()
-        out = func(*args, **kwargs)
-        t2 = time.perf_counter()
-        runtime = t2 - t1
-        print(f'Runtime {func.__name__}{args}: {runtime:.6f} s')
-        return out
-    return print_runtime
-
-
 class ShopifyWebhookHandler:
     def __init__(self,):
-        # load webhook auth secret
+        # load parameters / secret
         self.secret = os.environ.get("secret")
 
         # define recipients and instantiate messenger
@@ -41,7 +20,12 @@ class ShopifyWebhookHandler:
         self.Messenger = TelegramBot()
 
     def authenticate_hmac(self, auth_header = 'X-Shopify-Hmac-Sha256'):
-        '''authenticate webhook using hmac'''
+        '''authenticate request using hmac
+            Args:
+                auth_header (str): http request auth header
+            Returns:
+                bool: True if verification succeeded
+        '''
 
         hdig = hmac.new(
             self.secret.encode('utf-8'),
@@ -53,7 +37,7 @@ class ShopifyWebhookHandler:
         return hmac.compare_digest(hdig_b64, request.headers.get(auth_header))
 
     def handle_order_paid(self):
-        """authorise and run quality monitoring workflow, send resp. http responsem code"""
+        """authorise and run workflow for payload, send resp. response code"""
 
         # verify origin
         if not self.authenticate_hmac():
@@ -65,7 +49,7 @@ class ShopifyWebhookHandler:
 
     # @print_runtime
     def process_payload_lineitems(self):
-        '''run order-quality monitoring workflow'''
+        '''run order quality check workflow, if it errors -> notify admin'''
         try:
             # instantiate order obj, run workflow & create notification message
             Order = OrderCheckShopify(request.json)
@@ -83,3 +67,8 @@ class ShopifyWebhookHandler:
             self.Messenger.send_message(message[1], recipients=self.admin)
 
 
+
+# ideas/thoughts regarding extensions
+# use logging library for app monitoring / health checks
+# submit heavy-workload processes as background job (eg. managing payload computations)
+# ORM framework might simplify if direct interaction with SQL DB desired
